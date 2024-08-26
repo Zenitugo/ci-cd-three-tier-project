@@ -326,3 +326,74 @@ resource "aws_iam_role_policy_attachment" "attach_policy" {
   role                            = aws_iam_role.load_balancer_controller.name
   policy_arn                      = aws_iam_policy.aws_load_balancer_controller.arn
 }
+
+
+
+######################################### CREATION OF CLUSTER #################################
+###############################################################################################
+
+resource "aws_eks_cluster" "eks-cluster" {
+  name                    = var.cluster
+  role_arn                = var.eks-clusterrole
+  
+  
+
+  vpc_config {
+    # private subnets to configure kubernetes nodes and public to expose services from kubernetes to the internet by using load balancer
+    subnet_ids             = concat(var.private-subnet-ids, var.public-subnet-ids) 
+  }
+ 
+}
+
+
+
+# Create the EKS NODE GROUP
+resource "aws_eks_node_group" "ec2-node-group" {
+  cluster_name             = aws_eks_cluster.eks-cluster.name
+  node_group_name          = var.nodegroup
+  node_role_arn            = var.noderole
+  subnet_ids               = aws_subnet.private-subnet.*.id 
+  
+
+  scaling_config {
+    desired_size           = 3
+    max_size               = 5
+    min_size               = 1
+  }
+
+  update_config {
+    max_unavailable        = 1
+  }
+
+  instance_types           = [var.instance-type]
+
+  remote_access {
+    ec2_ssh_key            = aws_key_pair.key-pair.key_name 
+    source_security_group_ids = [aws_security_group.sg.id]
+  }
+  
+}
+
+
+
+########################### CREATE AN OIDC IDENTITY PROVIDER ########################################
+#####################################################################################################
+
+resource "aws_iam_openid_connect_provider" "eks" {
+  client_id_list           = ["sts.amazonaws.com"]
+  thumbprint_list          = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
+  url                      = aws_eks_cluster.eks-cluster.identity[0].oidc[0].issuer
+
+}
+
+######################### CREATION OF EBS CSI DRIVE ON ###############################################
+#######################################################################################################
+
+
+resource "aws_eks_addon" "csi_driver" {
+  cluster_name             = aws_eks_cluster.eks-cluster.name
+  addon_name               = var.addon_name
+  addon_version            = data.aws_eks_addon_version.latest.version
+  service_account_role_arn = var.ebs-csi-role 
+
+}

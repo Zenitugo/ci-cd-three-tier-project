@@ -3,3 +3,10 @@ variable "public-subnets" {}
 variable "private-subnets" {}
 variable "key_name" {}
 variable "qrcode-sg" {}
+variable "cluster-rolename" {}
+variable "node-rolename" {}
+variable "role_name" {}
+variable "openid-url" {}
+variable "openid-arn" {}
+variable "controller_rolename" {}
+variable "controller_policyname" {}

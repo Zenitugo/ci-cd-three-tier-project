@@ -41,8 +41,7 @@ jobs:
           --build-arg AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
           --build-arg AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
           --build-arg AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }} \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest \
-          ./backend
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest 
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
 
     - name: Build and push Frontend Docker image
@@ -50,8 +49,7 @@ jobs:
         cd front-end-nextjs
         docker build \
           --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest \
-          ./frontend
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest 
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
 
 

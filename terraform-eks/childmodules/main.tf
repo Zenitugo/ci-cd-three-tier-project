@@ -1,4 +1,5 @@
-# Create VPC
+########################################### CREATE VPC ##################################################
+#########################################################################################################
 resource "aws_vpc" "vpc" {
   cidr_block                   = var.cidr_block
   instance_tenancy             = "default"
@@ -10,8 +11,7 @@ resource "aws_vpc" "vpc" {
     Name = "qr-vpc"
   }
 }
-##########################################################################################################
-##########################################################################################################
+
 
 # Create subnets
 resource "aws_subnet" "public-subnet" {
@@ -37,8 +37,7 @@ resource "aws_subnet" "private-subnet" {
     Name                    = format("pri-sub %d", count.index+1)
   }
 }
-##########################################################################################################
-#########################################################################################################
+
 
 
 # Create internet gateway
@@ -51,8 +50,8 @@ resource "aws_internet_gateway" "gw" {
     Name                    = "vpc-igw"
   }
 }
-##########################################################################################################
-##########################################################################################################
+
+
 
 # Allocate an elastic ip address
 resource "aws_eip" "eip" {
@@ -63,8 +62,8 @@ resource "aws_eip" "eip" {
     Name                    = format("eip %d", count.index+1)
   }
 }
-##########################################################################################################
-##########################################################################################################
+
+
 
 # Create nat gateway
 resource "aws_nat_gateway" "nat" {
@@ -80,8 +79,7 @@ resource "aws_nat_gateway" "nat" {
     Name                    = format("nat-gw %d", count.index+1)
   }
 }
-###########################################################################################################
-###########################################################################################################
+
 
 # Create route tables and attach it to internet gateway and nat gateway
 
@@ -118,8 +116,7 @@ resource "aws_route_table" "public-rt" {
     Name                   = format("public-rt %d", count.index+1)
   }
 }
-#############################################################################################################
-#############################################################################################################
+
 
 
 
@@ -148,4 +145,27 @@ resource "aws_route_table_association" "public" {
     aws_route_table.public-rt,
     aws_subnet.public-subnet
     ]
+}
+
+
+
+########################################### CREATE KEY PAIR #######################################################
+################################################################################################################
+
+resource "aws_key_pair" "key-pair" {
+    key_name     = var.key_name
+    public_key   = tls_private_key.ssh_key.public_key_openssh
+}
+
+# Create a Private key
+resource "tls_private_key" "ssh_key" {
+  algorithm      = "RSA"
+  rsa_bits       = 4096
+}
+
+# Put the private key in a local file
+resource "local_file" "private-file" {
+  content         = tls_private_key.ssh_key.private_key_pem
+  filename        = "${path.module}/id_rsa/${aws_key_pair.key-pair.key_name}.pem"
+  file_permission = "0600"
 }

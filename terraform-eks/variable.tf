@@ -26,3 +26,6 @@ variable "public-subnet-ids" {}
 variable "key-id" {}
 variable "addon_name" {}
 variable "ebs-csi-role" {}
+variable "region" {}
+variable "bucket-name" {}
+variable "dynamodb_table" {}

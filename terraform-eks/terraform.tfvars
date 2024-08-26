@@ -1,0 +1,16 @@
+cidr_block                  =  
+region                      =
+private-subnets             =  
+public-subnets              =   
+cluster                     = 
+node-group                  = 
+instance_type               =   
+key_name                    = 
+cluster-rolename            =  
+node-role-name              = 
+key_filename                = 
+sg-name                     = 
+addon_name                  = 
+role_name                   = 
+controller_role_name        = 
+controller_policy_name      = 

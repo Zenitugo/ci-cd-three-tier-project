@@ -17,6 +17,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v4
+      with:
+        version: 'v1.29.0'
+      id: Install
+
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3 
+
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -53,9 +63,15 @@ jobs:
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
 
 
-    - name: Create s3 buckets and dynamodb
+    - name: Deploy the Kubernetes Engine
       run: |
+        cd terraform-eks
+        terraform init
+        terraform plan -var-file=terraform.tfvars
+        terrfaorm apply -auto-approve
 
+    - name: Access Cluster
+      run: aws eks update-kubeconfig --location <region> --name <name of cluster>
 
 
 

@@ -12,12 +12,12 @@ data "aws_iam_policy_document" "csi" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(var.openid-url, "https://", "")}:sub"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
       values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
     }
 
     principals {
-      identifiers = [var.openid-arn]
+      identifiers = [aws_iam_openid_connect_provider.eks.arn]
       type        = "Federated"
     }
   }
@@ -32,12 +32,12 @@ data "aws_iam_policy_document" "controller" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(var.openid-url, "https://", "")}:sub"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
       values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
     }
 
     principals {
-      identifiers = [var.openid-arn]
+      identifiers = [aws_iam_openid_connect_provider.eks.arn]
       type        = "Federated"
     }
   }

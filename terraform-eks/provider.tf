@@ -7,10 +7,10 @@ terraform {
   }
 
   backend "s3" {
-    bucket           = var.bucket-name
-    key              = var.key-name
-    region           = var.region
-    dynamodb_table   = var.dynamodb_table
+    bucket           = "blueray254"
+    key              = "qr-code-key"
+    region           = "eu-west-1"
+    dynamodb_table   = "TerraformStateLock"
   }
 }
 

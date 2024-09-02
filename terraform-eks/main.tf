@@ -217,6 +217,26 @@ resource "aws_security_group" "sg" {
 }
 
 
+############################# CREATION OF IAM ROLE FOR CLOUD WATCH #########################
+############################################################################################
+
+resource "aws_iam_role" "cloudwatch_agent_role" {
+  name = var.cloud-watch-name
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
 
 
 ############################## CREATION OF IAM ROLE FOR EKS CLUSTER #######################
@@ -291,6 +311,19 @@ resource "aws_iam_role_policy_attachment" "ContainerRegistry" {
 }
 
 
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent_policy_attachment" {
+  role                            = aws_iam_role.worker-node-role.name
+  policy_arn                      = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+
+
+# Create an Instance profile that will only be used by the ec2 nodes
+resource "aws_iam_instance_profile" "eks_node_instance_profile" {
+  name                            = var.instance-profile
+  role                            = aws_iam_role.worker-node-role.name
+}
+
 
 
 # IAM role for csi drive addon
@@ -326,7 +359,6 @@ resource "aws_iam_role_policy_attachment" "attach_policy" {
   role                            = aws_iam_role.load_balancer_controller.name
   policy_arn                      = aws_iam_policy.controller_policy.arn
 }
-
 
 
 ######################################### CREATION OF CLUSTER #################################

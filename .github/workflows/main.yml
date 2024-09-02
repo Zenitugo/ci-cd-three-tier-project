@@ -74,8 +74,8 @@ jobs:
       run: |
         cd terraform-eks
         terraform init
-        terraform plan -var-file=terraform.tfvars
-        terrfaorm apply -auto-approve
+        terraform plan -var-file=terraform.tfvars -out=tfplan  # using the -out flag to save the execution plan to a file
+        terraform apply -auto-approve tfplan
 
     - name: Access Cluster
       run: aws eks update-kubeconfig --location eu-west-1 --name ${{ secrets.EKS_CLUSTER_NAME }}

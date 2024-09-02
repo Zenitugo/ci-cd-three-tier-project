@@ -1,5 +1,5 @@
 name: CI/CD Workflow for a full stack application
-on:
+#on:
   push:
     branches:
       - master
@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy      # This ensures the destroy job runs after the deploy job
 
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' && github.ref == 'refs/heads/master' }} # Adjust condition as needed
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event_name == 'push' && github.ref == 'refs/heads/master' }} # Adjust condition as needed
         
     steps:
       - name: Checkout code

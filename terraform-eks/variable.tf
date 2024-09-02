@@ -14,3 +14,4 @@ variable "instance-type" {}
 variable "key_filepath" {}
 variable "addon_name" {}
 variable "region" {}
+variable "instance-profile" {}

@@ -77,7 +77,7 @@ jobs:
         terraform apply -auto-approve tfplan
 
     - name: Access Cluster
-      run: aws eks update-kubeconfig --location eu-west-1 --name fullStackAppCluster
+      run: aws eks update-kubeconfig --region eu-west-1 --name fullStackAppCluster
 
 
   destroy:

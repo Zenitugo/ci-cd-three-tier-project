@@ -63,20 +63,20 @@ jobs:
           --build-arg AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
           --build-arg AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
           --build-arg AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }} \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }} \
           .
 
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
 
     - name: Build and push Frontend Docker image
       run: |
         cd front-end-nextjs
         docker build \
           --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }} \
           .
 
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
 
 
     - name: Deploy the Kubernetes Engine
@@ -94,6 +94,8 @@ jobs:
         helm repo add grafana https://grafana.github.io/helm-charts
         helm repo update
         helm install grafana grafana/grafana --namespace grafana --set persistence.enabled=true --set adminUser=admin --set adminPassword=admin256  
+
+    - name: Install Flux 
 
 
   destroy:

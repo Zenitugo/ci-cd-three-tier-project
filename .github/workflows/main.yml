@@ -24,6 +24,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+      GITHUB_TOKEN: ${{ secrets.gh_token }}
 
     steps:
     - name: Checkout code
@@ -89,14 +90,42 @@ jobs:
     - name: Access Cluster
       run: aws eks update-kubeconfig --region eu-west-1 --name fullStackAppCluster
 
+    - name: Create Namespace
+      run: |
+        kubectl create ns grafana
+        kubectl create ns flux
+        kubectl create ns ingress
+        kubectl create ns cloudwatch
+
+    - name: Deploy cloud watch and ingress-nginx
+      run: |
+        kubectl apply -f cloudwatch.yml
+        kubectl apply f cloudwatch-config.yml
+        kubectl apply -f ingressnginx.yml
+
     - name: Install Grafana into the cluster
       run: |
         helm repo add grafana https://grafana.github.io/helm-charts
         helm repo update
         helm install grafana grafana/grafana --namespace grafana --set persistence.enabled=true --set adminUser=admin --set adminPassword=admin256  
 
-    - name: Install Flux 
+    - name: Install Flux CLI
+      run: |
+        curl -s https://fluxcd.io/install.sh | sudo bash
 
+  
+    - name: Set github token for flux
+      run: export GITHUB_TOKEN=${{ secrets.gh_token}}
+
+    - name: Bootstrap Flux with Github
+      run: |
+        flux bootstrap github \
+        --token-auth \
+        --owner=Zenitugo \
+        --repository=my-repository-name \
+        --branch=master \
+        --path=./manifest \
+        --personal        
 
   destroy:
     runs-on: ubuntu-latest

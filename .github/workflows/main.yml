@@ -89,6 +89,10 @@ jobs:
     - name: Access Cluster
       run: aws eks update-kubeconfig --region eu-west-1 --name fullStackAppCluster
 
+    - name: Install Grafana into the cluster
+      run: |
+        helm install grafana grafana/grafana --namespace grafana --set persistence.enabled=true --set adminUser=admin --set adminPassword=admin256  
+
 
   destroy:
     runs-on: ubuntu-latest

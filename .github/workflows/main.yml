@@ -79,6 +79,21 @@ jobs:
 
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
 
+    - name: Update Kubernetes Manifests
+      run: |
+        sed -i 's|image: zenitugo/frontend:{{ IMAGE_TAG }}|image: zenitugo/frontend:${{ github.sha }}|' ./manifest/frontend.yaml
+        sed -i 's|image: zenitugo/backend:{{ IMAGE_TAG }}|image: zenitugo/backend:${{ github.sha }}|' ./manifest/backend.yaml
+
+
+    - name: Commit and Push Updated Manifests
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Update images to ${{ github.sha }}"
+        git push origin master
+      
+      
 
     - name: Deploy the Kubernetes Engine
       run: |
@@ -96,11 +111,12 @@ jobs:
         kubectl create ns flux
         kubectl create ns ingress
         kubectl create ns cloudwatch
+        kubectl create ns qr-code
 
     - name: Deploy cloud watch and ingress-nginx
       run: |
         kubectl apply -f cloudwatch.yml
-        kubectl apply f cloudwatch-config.yml
+        kubectl apply -f cloudwatch-config.yml
         kubectl apply -f ingressnginx.yml
 
     - name: Install Grafana into the cluster
@@ -113,7 +129,6 @@ jobs:
       run: |
         curl -s https://fluxcd.io/install.sh | sudo bash
 
-  
     - name: Set github token for flux
       run: export GITHUB_TOKEN=${{ secrets.gh_token}}
 

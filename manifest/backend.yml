@@ -1,0 +1,66 @@
+# Deployment script for the backend side of the application
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: qr-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      type: backend
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        type: backend
+        app: fastapi
+    spec:
+      containers:
+        - name: backend
+          image: zenitugo/backend:{{ IMAGE_TAG }}
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+          ports:
+          - containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 300
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 3
+            timeoutSeconds: 2
+            failureThreshold: 3
+            successThreshold: 1
+      
+
+# Service for the backend
+# Service for the front end
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: qr-app
+  labels:
+    app: fastapi
+    type: backend
+spec:
+  selector:
+    app: fastapi
+    type: backend
+  ports:
+  - port: 8000
+    targetPort: 8000

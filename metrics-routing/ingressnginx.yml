@@ -1,3 +1,23 @@
+# Requesting for letsencrypt cert
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  namespace: cert-manager
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory  #Acme server url
+    email: ugochiukaegbu21@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-prod        #Name of secret used to store the ACME account private key
+    solvers:
+      - selector: {}
+        http01:
+          ingress:
+            class: nginx 
+
+
 # Ingress controller routing request to the front-end service 
 ---
 apiVersion: networking.k8s.io/v1

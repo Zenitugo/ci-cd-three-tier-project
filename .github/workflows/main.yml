@@ -113,17 +113,26 @@ jobs:
         kubectl create ns cloudwatch
         kubectl create ns qr-code
 
-    - name: Deploy cloud watch and ingress-nginx
-      run: |
-        kubectl apply -f cloudwatch.yml
-        kubectl apply -f cloudwatch-config.yml
-        kubectl apply -f ingressnginx.yml
-
     - name: Install Grafana into the cluster
       run: |
         helm repo add grafana https://grafana.github.io/helm-charts
         helm repo update
         helm install grafana grafana/grafana --namespace grafana --set persistence.enabled=true --set adminUser=admin --set adminPassword=admin256  
+
+    - name: Install nginx ingress controller
+      run:  |
+        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/aws/deploy.yaml
+          
+                
+    - name: Install Cert Manager
+      run: 
+        helm repo add jetstack https://charts.jetstack.io && helm repo update && helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.7.2 --set installCRDs=true
+          
+    - name: Install Cert-Manager Kubectl Plugin
+      run: |
+        curl -L -o kubectl-cert-manager.tar.gz https://github.com/jetstack/cert-manager/releases/latest/download/kubectl-cert_manager-linux-amd64.tar.gz
+        tar xzf kubectl-cert-manager.tar.gz
+        sudo mv kubectl-cert_manager /usr/local/bin 
 
     - name: Install Flux CLI
       run: |
@@ -140,7 +149,14 @@ jobs:
         --repository=my-repository-name \
         --branch=master \
         --path=./manifest \
-        --personal        
+        --personal      
+        
+    - name: Deploy cloud watch and ingress-nginx
+      run: |
+        cd metrics-routing
+        kubectl apply -f cloudwatch.yml
+        kubectl apply -f cloudwatch-config.yml
+        kubectl apply -f ingressnginx.yml
 
   destroy:
     runs-on: ubuntu-latest

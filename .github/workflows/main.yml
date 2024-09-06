@@ -81,7 +81,7 @@ jobs:
 
     - name: Update Kubernetes Manifests
       run: |
-        cd manifesr
+        cd manifest
         sed -i 's|image: zenitugo/frontend:{{ IMAGE_TAG }}|image: zenitugo/frontend:${{ github.sha }}|' frontend.yaml
         sed -i 's|image: zenitugo/backend:{{ IMAGE_TAG }}|image: zenitugo/backend:${{ github.sha }}|' backend.yaml
 

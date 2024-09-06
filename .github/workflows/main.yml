@@ -81,8 +81,9 @@ jobs:
 
     - name: Update Kubernetes Manifests
       run: |
-        sed -i 's|image: zenitugo/frontend:{{ IMAGE_TAG }}|image: zenitugo/frontend:${{ github.sha }}|' manifest/frontend.yaml
-        sed -i 's|image: zenitugo/backend:{{ IMAGE_TAG }}|image: zenitugo/backend:${{ github.sha }}|' manifest/backend.yaml
+        cd manifesr
+        sed -i 's|image: zenitugo/frontend:{{ IMAGE_TAG }}|image: zenitugo/frontend:${{ github.sha }}|' frontend.yaml
+        sed -i 's|image: zenitugo/backend:{{ IMAGE_TAG }}|image: zenitugo/backend:${{ github.sha }}|' backend.yaml
 
 
     - name: Commit and Push Updated Manifests

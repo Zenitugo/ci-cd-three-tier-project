@@ -120,13 +120,13 @@ jobs:
                 
     - name: Install Cert Manager
       run: 
-        helm repo add jetstack https://charts.jetstack.io && helm repo update && helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.7.2 --set installCRDs=true
+        helm repo add jetstack https://charts.jetstack.io && helm repo update && helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.15.3 --set installCRDs=true --set prometheus.enabled=false
           
-    - name: Install Cert-Manager Kubectl Plugin
-      run: |
-        curl -L -o kubectl-cert-manager-linux-amd64.tar.gz https://github.com/jetstack/cert-manager/releases/latest/download/kubectl-cert_manager-linux-amd64.tar.gz
-        tar xzf kubectl-cert-manager-linux-amd64.tar.gz
-        sudo mv kubectl-cert_manager /usr/local/bin 
+    # - name: Install Cert-Manager Kubectl Plugin
+    #   run: |
+    #     curl -L -o kubectl-cert-manager-linux-amd64.tar.gz https://github.com/jetstack/cert-manager/releases/latest/download/kubectl-cert_manager-linux-amd64.tar.gz
+    #     tar xzf kubectl-cert-manager-linux-amd64.tar.gz
+    #     sudo mv kubectl-cert_manager /usr/local/bin 
 
     - name: Install Flux CLI
       run: |

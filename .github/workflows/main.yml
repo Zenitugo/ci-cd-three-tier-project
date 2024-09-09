@@ -95,21 +95,28 @@ jobs:
       run: |
         kubectl create ns grafana
         kubectl create ns flux
-        kubectl create ns ingress
+        kubectl create ns ingress-nginx
         kubectl create ns cloudwatch
         kubectl create ns qr-code
         kubectl create ns cert-manager
 
     - name: Install Grafana into the cluster
       run: |
-        helm repo add grafana https://grafana.github.io/helm-charts
-        helm repo update
-        helm install grafana grafana/grafana --namespace grafana --set persistence.enabled=true --set adminUser=admin --set adminPassword=admin256  
+        if kubectl get deployment grafana -n grafana; then
+          echo "Grafana already installed"
+        else
+          helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo update
+          helm install grafana grafana/grafana --namespace grafana --set persistence.enabled=true --set adminUser=admin --set adminPassword=admin256  
+        fi
 
     - name: Install nginx ingress controller
       run:  |
-        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/aws/deploy.yaml
-          
+        if kubectl get deployment ingress-nginx-controller -n ingress-nginx; then
+          echo "ingress-nginx controller instaled"
+        else
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/aws/deploy.yaml
+        fi
                 
     - name: Install Cert Manager
       run: 

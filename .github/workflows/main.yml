@@ -128,33 +128,33 @@ jobs:
     #     tar xzf kubectl-cert-manager-linux-amd64.tar.gz
     #     sudo mv kubectl-cert_manager /usr/local/bin 
 
-    - name: Create GitHub Token Secret in Cluster
-      run: |
-        kubectl create secret generic github-token-secret \
-        --from-literal=GITHUB_TOKEN=${{ secrets.gh_token }} \
-        --namespace=<your-namespace>
+    # - name: Create GitHub Token Secret in Cluster
+    #   run: |
+    #     kubectl create secret generic github-token-secret \
+    #     --from-literal=GITHUB_TOKEN=${{ secrets.gh_token }} \
+    #     --namespace=<your-namespace>
   
 
-    - name: Install Flux CLI
-      run: |
-        curl -s https://fluxcd.io/install.sh | sudo bash
+    # - name: Install Flux CLI
+    #   run: |
+    #     curl -s https://fluxcd.io/install.sh | sudo bash
 
-    - name: Bootstrap Flux with Github
-      run: |
-        flux bootstrap github \
-        --token-auth \
-        --owner=Zenitugo \
-        --repository=ci-cd-three-tier-project \
-        --branch=master \
-        --path=./manifest \
-        --personal      
+    # - name: Bootstrap Flux with Github
+    #   run: |
+    #     flux bootstrap github \
+    #     --token-auth \
+    #     --owner=Zenitugo \
+    #     --repository=ci-cd \
+    #     --branch=master \
+    #     --path=./manifest \
+    #     --personal      
         
-    - name: Deploy cloud watch and ingress-nginx
-      run: |
-        cd metrics-routing
-        kubectl apply -f cloudwatch.yml
-        kubectl apply -f cloudwatch-config.yml
-        kubectl apply -f ingressnginx.yml
+    # - name: Deploy cloud watch and ingress-nginx
+    #   run: |
+    #     cd metrics-routing
+    #     kubectl apply -f cloudwatch.yml
+    #     kubectl apply -f cloudwatch-config.yml
+    #     kubectl apply -f ingressnginx.yml
 
   destroy:
     runs-on: ubuntu-latest

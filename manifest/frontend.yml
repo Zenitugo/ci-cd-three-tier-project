@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: zenitugo/frontend:{{ IMAGE_TAG }}
+          image: zenitugo/frontend:latest
           resources:
             requests:
               cpu: "250m"

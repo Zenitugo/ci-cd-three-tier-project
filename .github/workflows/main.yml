@@ -64,38 +64,23 @@ jobs:
           --build-arg AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
           --build-arg AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
           --build-arg AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }} \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }} \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest \
           .
 
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
 
     - name: Build and push Frontend Docker image
       run: |
         cd front-end-nextjs
         docker build \
           --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }} \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest \
           .
 
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
 
-    - name: Update Kubernetes Manifests
-      run: |
-        cd manifest
-        sed -i 's|image: zenitugo/frontend:{{ IMAGE_TAG }}|image: zenitugo/frontend:${{ github.sha }}|' frontend.yml
-        sed -i 's|image: zenitugo/backend:{{ IMAGE_TAG }}|image: zenitugo/backend:${{ github.sha }}|' backend.yml
-
-
-    - name: Commit and Push Updated Manifests
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Update images to ${{ github.sha }}"
-        git push origin master
-      
-      
-
+  
+  
     - name: Deploy the Kubernetes Engine
       run: |
         cd terraform-eks

@@ -1,5 +1,5 @@
 name: CI/CD Workflow for a full stack application
-on:
+#on:
   push:
     branches:
       - master
@@ -95,7 +95,7 @@ jobs:
     - name: Create Namespace
       run: |
         kubectl create ns grafana
-        kubectl create ns flux
+        kubectl create ns flux-system
         kubectl create ns ingress-nginx
         kubectl create ns cloudwatch
         kubectl create ns qr-code
@@ -136,7 +136,7 @@ jobs:
         flux bootstrap github \
         --token-auth \
         --owner=Zenitugo \
-        --repository=ci-cd \
+        --repository=ci-cd-three-tier-project \
         --branch=master \
         --path=./manifest \
         --personal      

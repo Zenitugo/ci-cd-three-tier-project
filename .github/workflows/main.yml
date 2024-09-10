@@ -1,5 +1,5 @@
 name: CI/CD Workflow for a full stack application
-#on:
+on:
   push:
     branches:
       - master

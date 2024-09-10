@@ -145,7 +145,7 @@ jobs:
       run: |
         cd metrics-routing
         kubectl apply -f cloudwatch.yml
-        kubectl apply -f cloudwatch-config.yml
+        kubectl apply -f cloudwatch-configmap.yml
         kubectl apply -f ingressnginx.yml
 
   destroy:

@@ -87,7 +87,7 @@ jobs:
       run: |
         cd terraform-eks
         terraform init
-        terraform force-unlock 656613bd-71dd-b50d-c337-01df32f8f27e
+        terraform force-unlock -force 656613bd-71dd-b50d-c337-01df32f8f27e
         terraform plan -var-file=terraform.tfvars -out=tfplan  # using the -out flag to save the execution plan to a file
         terraform apply -auto-approve tfplan
 

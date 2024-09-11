@@ -22,6 +22,7 @@ jobs:
     env:
       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
@@ -98,7 +99,7 @@ jobs:
         kubectl create ns flux-system
         kubectl create ns ingress-nginx
         kubectl create ns cloudwatch
-        kubectl create ns qr-code
+        kubectl create ns qr-app
         kubectl create ns cert-manager
 
     - name: Install Grafana into the cluster

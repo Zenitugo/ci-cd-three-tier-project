@@ -112,7 +112,7 @@ jobs:
 
     - name: Create Kubernetes secrets for the frontend
       run: |
-        kubectl create secret generic backend_url  \
+        kubectl create secret generic backend-url  \
         --from-literal=react_app_api_url=${{ secrets.REACT_APP_API_URL }} \
         -n qr-app
 

@@ -21,6 +21,12 @@ spec:
       containers:
         - name: frontend
           image: zenitugo/frontend:latest
+          env:
+            - name: REACT_APP_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: backend_url
+                  key: react_app_api_url
           resources:
             requests:
               cpu: "500m"

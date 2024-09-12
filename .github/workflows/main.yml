@@ -108,13 +108,13 @@ jobs:
         --from-literal=aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }} \
         --from-literal=aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
         --from-literal=aws_bucket_name=${{ secrets.AWS_BUCKET_NAME }} \
-        --dry-run=client -o yaml 
+        -n qr-app
 
     - name: Create Kubernetes secrets for the frontend
       run: |
         kubectl create secret generic backend_url  \
         --from-literal=react_app_api_url=${{ secrets.REACT_APP_API_URL }} \
-        --dry-run=client -o yaml 
+        -n qr-app
 
     - name: Install Grafana into the cluster
       run: |

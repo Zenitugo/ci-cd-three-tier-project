@@ -20,6 +20,22 @@ spec:
       containers:
         - name: backend
           image: zenitugo/backend:latest
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws_access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws_secret_access_key
+            - name: AWS_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws_bucket_name
           resources:
             requests:
               cpu: "250m"
@@ -47,7 +63,6 @@ spec:
       
 
 # Service for the backend
-# Service for the front end
 ---
 apiVersion: v1
 kind: Service

@@ -25,7 +25,7 @@ spec:
             - name: REACT_APP_API_URL
               valueFrom:
                 secretKeyRef:
-                  name: backend_url
+                  name: backend-url
                   key: react_app_api_url
           resources:
             requests:

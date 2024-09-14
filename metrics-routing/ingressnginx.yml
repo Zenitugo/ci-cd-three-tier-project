@@ -30,6 +30,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   rules:
@@ -37,14 +38,23 @@ spec:
     http:
       paths:
       - pathType: Prefix
+        path: /api(/|$)(.*)
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 30000
+
+      - pathType: Prefix
         path: /
         backend:
           service:
-            name: front-end
+            name: frontend-service
             port:
-              number: 80
+              number: 30500
+
   tls:
   - hosts:
       - qr.sapphireaura.com.ng
-    secretName: letsencrypt-production
+    secretName: letsencrypt-prod
     

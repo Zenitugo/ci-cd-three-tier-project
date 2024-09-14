@@ -36,21 +36,21 @@ spec:
               memory: "256Mi"
           ports:
           - containerPort: 3000
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 3000
-            initialDelaySeconds: 300
-            periodSeconds: 3
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 30
-            periodSeconds: 3
-            timeoutSeconds: 2
-            failureThreshold: 3
-            successThreshold: 1
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: 3000
+          #   initialDelaySeconds: 300
+          #   periodSeconds: 3
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 3000
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 3
+          #   timeoutSeconds: 2
+          #   failureThreshold: 3
+          #   successThreshold: 1
       
 
 # Service for the front end

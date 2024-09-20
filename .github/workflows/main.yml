@@ -129,7 +129,7 @@ jobs:
     - name: Install nginx ingress controller
       run:  |
         if kubectl get deployment ingress-nginx-controller -n ingress-nginx; then
-          echo "ingress-nginx controller instaled"
+          echo "ingress-nginx controller installed"
         else
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/aws/deploy.yaml
         fi

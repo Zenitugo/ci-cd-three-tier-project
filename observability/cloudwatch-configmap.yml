@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudwatch-agent-config
+  namespace: kube-system
+data:
+  cloudwatch-agent-config.json: |
+    {
+      "agent": {
+        "metrics_collection_interval": 60
+      },
+      "metrics": {
+        "namespace": "ContainerInsights",
+        "metrics_collected": {
+          "cpu": {
+            "measurement": [
+              "cpu_usage_idle",
+              "cpu_usage_user",
+              "cpu_usage_system"
+            ]
+          },
+          "mem": {
+            "measurement": [
+              "mem_available",
+              "mem_total"
+            ]
+          }
+        }
+      }
+    }

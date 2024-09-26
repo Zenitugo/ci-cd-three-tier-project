@@ -13,7 +13,8 @@ app = FastAPI()
 
 # Allowing CORS for local testing
 origins = [
-    "http://localhost:3000,https://qr.sapphireaura.com.ng"
+    "http://localhost:3000",
+    "https://qr.sapphireaura.com.ng"
 ]
 
 app.add_middleware(

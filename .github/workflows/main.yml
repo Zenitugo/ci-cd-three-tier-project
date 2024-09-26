@@ -159,7 +159,7 @@ jobs:
         
     - name: Create Flux dashboard to visualize the deployment
       run: |
-        cd manifeszt
+        cd manifest
         kubectl apply -f capacitor-dashboard.yml
         kubectl -n flux-system port-forward svc/capacitor 9000:9000
         

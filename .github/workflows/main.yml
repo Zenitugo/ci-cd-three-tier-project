@@ -155,13 +155,26 @@ jobs:
         --branch=master \
         --path=./manifest \
         --personal      
+
         
-    - name: Deploy cloud watch and ingress-nginx
+    - name: Create Flux dashboard to visualize the deployment
       run: |
-        cd metrics-routing
+        cd manifeszt
+        kubectl apply -f capacitor-dashboard.yml
+        kubectl -n flux-system port-forward svc/capacitor 9000:9000
+        
+        
+    - name: Deploy ingress-nginx
+      run: |
+        cd routing
+        kubectl apply -f ingressnginx.yml
+        
+    - name: Deploy cloud watch
+      run: |
+        cd observability
         kubectl apply -f cloudwatch.yml
         kubectl apply -f cloudwatch-configmap.yml
-        kubectl apply -f ingressnginx.yml
+  
 
   destroy:
     runs-on: ubuntu-latest      # This ensures the destroy job runs after the deploy job

@@ -58,7 +58,7 @@ spec:
     http:
       paths:
       - pathType: Prefix #ImplementationSpecific
-        path: /api/generate-qr/    #/api(/|$)(.*)
+        path:   /api(/|$)(.*) #/api/generate-qr/ 
         backend:
           service:
             name: backend-service

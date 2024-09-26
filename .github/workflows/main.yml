@@ -161,7 +161,6 @@ jobs:
       run: |
         cd manifest
         kubectl apply -f capacitor-dashboard.yml
-        kubectl -n flux-system port-forward svc/capacitor 9000:9000
         
         
     - name: Deploy ingress-nginx

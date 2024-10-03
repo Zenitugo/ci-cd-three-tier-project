@@ -77,7 +77,7 @@ jobs:
         docker build \
         --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
         -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest \
-        .
+        -f Dockerfile .
 
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
 

@@ -76,8 +76,7 @@ jobs:
         cd front-end-nextjs
         docker build \
           --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest \
-          .
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest .
 
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
 

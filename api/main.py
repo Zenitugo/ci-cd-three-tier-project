@@ -9,7 +9,7 @@ from io import BytesIO
 from dotenv import load_dotenv
 load_dotenv()
 
-app = FastAPI("/api")
+app = FastAPI()
 
 # Allowing CORS for local testing
 origins = [
@@ -31,7 +31,7 @@ s3 = boto3.client(
     aws_access_key_id= os.getenv("AWS_ACCESS_KEY"),
     aws_secret_access_key= os.getenv("AWS_SECRET_KEY"))
 
-bucket_name = os.getenv('AWS_BUCKET_NAME') # Add your bucket name here
+bucket_name = 'fullstackbuck' # Add your bucket name here
 
 @app.post("/generate-qr/")
 async def generate_qr(url: str):

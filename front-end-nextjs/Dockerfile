@@ -18,7 +18,7 @@ WORKDIR /usr/src/app
 
 
 # Copy package.json and package-lock.json first to leverage Docker cache
-COPY package*.json ./
+COPY package*.json package.json  ./
 
 # Install dependencies
 RUN npm install
@@ -34,11 +34,11 @@ COPY . .
 RUN chown -R node:node /usr/src/app
 
 
-# Use ARG to pass the API URL
-ARG REACT_APP_API_URL
+# # Use ARG to pass the API URL
+# ARG REACT_APP_API_URL
 
-# Export it as environment variable
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
+# # Export it as environment variable
+# ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 # Run the application as a non-root user.
 USER node

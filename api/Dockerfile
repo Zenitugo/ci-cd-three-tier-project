@@ -12,36 +12,41 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
+# ARG UID=10001
+# RUN adduser \
+#     --disabled-password \
+#     --gecos "" \
+#     --home "/nonexistent" \
+#     --shell "/sbin/nologin" \
+#     --no-create-home \
+#     --uid "${UID}" \
+#     appuser
+
+# Copy the dependency file
+COPY requirements.txt ./
+
+# RUN --mount=type=cache,target=/root/.cache/pip \
+#     --mount=type=bind,source=requirements.txt,target=requirements.txt \
+#     python -m pip install -r requirements.txt
 
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python -m pip install -r requirements.txt
-
+RUN pip install -r requirements.txt
 # Switch to the non-privileged user to run the application.
-USER appuser
+# USER appuser
+
 
 # Copy the source code into the container.
 COPY . .
 
-# Use ARG to pass AWS credentials
-ARG AWS_ACCESS_KEY
-ARG AWS_SECRET_KEY
-ARG AWS_BUCKET_NAME
+# # Use ARG to pass AWS credentials
+# ARG AWS_ACCESS_KEY
+# ARG AWS_SECRET_KEY
+# ARG AWS_BUCKET_NAME
 
-# Export them as environment variables
-ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
-ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY
-ENV AWS_BUCKET_NAME=$AWS_BUCKET_NAME
+# # Export them as environment variables
+# ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
+# ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY
+# ENV AWS_BUCKET_NAME=$AWS_BUCKET_NAME
 
 
 

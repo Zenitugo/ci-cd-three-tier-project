@@ -56,8 +56,8 @@ spec:
   - host: qr.sapphireaura.com.ng
     http:
       paths:
-      - pathType: Exact #ImplementationSpecific
-        path:   /api/generate-qr/
+      - pathType: Prefix #ImplementationSpecific
+        path:   /generate-qr/
         backend:
           service:
             name: backend-service

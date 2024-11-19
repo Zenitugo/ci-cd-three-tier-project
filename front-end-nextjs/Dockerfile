@@ -1,51 +1,20 @@
-# syntax=docker/dockerfile:1
+FROM node:18-alpine AS base
 
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
+WORKDIR /app
 
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
-ARG NODE_VERSION=20.15.0
+RUN \
+if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+elif [ -f package-lock.json ]; then npm ci; \
+elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+else echo "Lockfile not found." && exit 1; \
+fi
 
-FROM node:${NODE_VERSION}-alpine
-
-# Use develoment node environment by default.
-ENV NODE_ENV development
-
-
-WORKDIR /usr/src/app
-
-
-# Copy package.json and package-lock.json first to leverage Docker cache
-COPY package*.json package.json  ./
-
-# Install dependencies
-RUN npm install
-
-
-# Install additional dependencies
-RUN npm install tailwindcss postcss autoprefixer
-
-# Copy the rest of the source files into the image.
 COPY . .
 
-# Change the ownwership of the app directory
-RUN chown -R node:node /usr/src/app
+RUN npm run build 
 
-
-# # Use ARG to pass the API URL
-# ARG REACT_APP_API_URL
-
-# # Export it as environment variable
-# ENV REACT_APP_API_URL=$REACT_APP_API_URL
-
-# Run the application as a non-root user.
-USER node
-
-
-# Expose the port that the application listens on.
 EXPOSE 3000
 
-# Run the application.
-CMD ["npm", "run", "dev"]
+CMD ["npm","start"]
